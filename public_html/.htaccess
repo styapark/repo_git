@@ -1,0 +1,29 @@
+# Configuration to MyLite CMS
+# Styapark Dev 2016 - 2022
+# Stya Park - styapark@gmail.com
+
+
+# enable to index
+#Options -Indexes
+# enable to rewrite URL
+#RewriteEngine On
+
+# enable redirect to HTTPS
+#RewriteCond %{HTTPS} off
+#RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# enable base to rewrite
+#RewriteBase /
+
+# condition and rule
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+# rule rewrite enable
+RewriteRule .* index.php/$0 [PT,L]
+# rule rewrite disable
+RewriteRule ^(application|package|system|views) - [F,L]
+
+# mode debug, set cache off
+#php_flag opcache.enable On
+
+#Require all granted

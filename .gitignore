@@ -1,0 +1,9 @@
+/nbproject/*
+#*.sql
+userguide
+userguide/*
+files/*
+*.env
+*.properties
+application/controllers/git/*
+.error*
