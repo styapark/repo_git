@@ -19,6 +19,12 @@ class MY_Controller extends RestController {
 
         // assign
         $this->data_view['title'] = $this->app_name;
+        $c_git = APPPATH.'/controllers/git/';
+        if ( !file_exists($c_git) ) {
+            if ( !@mkdir($c_git, 0777) ) {
+                die('Cant create folder git in controllers');
+            }
+        }
     }
 
     public function ion_is_login() {
