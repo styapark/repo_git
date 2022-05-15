@@ -17,7 +17,7 @@ require_once __DIR__.'/rest_default.php';
 |           authorization key
 |
 */
-$config['rest_auth'] = false;
+$config['rest_auth'] = 'basic';
 
 /*
 |--------------------------------------------------------------------------
@@ -33,19 +33,7 @@ $config['rest_auth'] = false;
 | Note: If 'rest_auth' is set to 'session' then change 'auth_source' to the name of the session variable
 |
 */
-$config['auth_source'] = 'ldap';
-
-/*
-|--------------------------------------------------------------------------
-| Allow Authentication and API Keys
-|--------------------------------------------------------------------------
-|
-| Where you wish to have Basic, Digest or Session login, but also want to use API Keys (for limiting
-| requests etc), set to TRUE;
-|
-*/
-$config['allow_auth_and_keys'] = true;
-$config['strict_api_and_auth'] = true; // force the use of both api and auth before a valid api request is made
+$config['auth_source'] = 'library';
 
 /*
 |--------------------------------------------------------------------------
@@ -63,5 +51,81 @@ $config['strict_api_and_auth'] = true; // force the use of both api and auth bef
 | e.g: md5('admin:REST API:1234') = '1e957ebc35631ab22d5bd6526bd14ea2'
 |
 */
-$config['auth_library_class'] = '';
-$config['auth_library_function'] = '';
+$config['auth_library_class'] = 'Token';
+$config['auth_library_function'] = 'login';
+$config['auth_controller_function'] = 'git_privileges';
+
+/*
+|--------------------------------------------------------------------------
+| REST API Keys Table Name
+|--------------------------------------------------------------------------
+|
+| The table name in your database that stores API keys
+|
+*/
+$config['rest_keys_table'] = 'tokens';
+
+/*
+|--------------------------------------------------------------------------
+| REST Enable Keys
+|--------------------------------------------------------------------------
+|
+| When set to TRUE, the REST API will look for a column name called 'key'.
+| If no key is provided, the request will result in an error. To override the
+| column name see 'rest_key_column'
+|
+| Default table schema:
+|   CREATE TABLE `keys` (
+|       `id` INT(11) NOT NULL AUTO_INCREMENT,
+|       `user_id` INT(11) NOT NULL,
+|       `key` VARCHAR(40) NOT NULL,
+|       `level` INT(2) NOT NULL,
+|       `ignore_limits` TINYINT(1) NOT NULL DEFAULT '0',
+|       `is_private_key` TINYINT(1)  NOT NULL DEFAULT '0',
+|       `ip_addresses` TEXT NULL DEFAULT NULL,
+|       `date_created` INT(11) NOT NULL,
+|       PRIMARY KEY (`id`)
+|   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+|
+*/
+$config['rest_enable_keys'] = TRUE;
+
+/*
+|--------------------------------------------------------------------------
+| REST Table Key Column Name
+|--------------------------------------------------------------------------
+|
+| If not using the default table schema in 'rest_enable_keys', specify the
+| column name to match e.g. my_key
+|
+*/
+$config['rest_key_column'] = 'token';
+
+/*
+|--------------------------------------------------------------------------
+| REST API Limits method
+|--------------------------------------------------------------------------
+|
+| Specify the method used to limit the API calls
+|
+| Available methods are :
+| $config['rest_limits_method'] = 'IP_ADDRESS'; // Put a limit per ip address
+| $config['rest_limits_method'] = 'API_KEY'; // Put a limit per api key
+| $config['rest_limits_method'] = 'METHOD_NAME'; // Put a limit on method calls
+| $config['rest_limits_method'] = 'ROUTED_URL';  // Put a limit on the routed URL
+|
+*/
+$config['rest_limits_method'] = 'API_KEY';
+
+/*
+|--------------------------------------------------------------------------
+| REST API Key Variable
+|--------------------------------------------------------------------------
+|
+| Custom header to specify the API key
+
+| Note: Custom headers with the X- prefix are deprecated as of
+| 2012/06/12. See RFC 6648 specification for more details
+|
+*/
+$config['rest_key_name'] = 'X-TOKEN';

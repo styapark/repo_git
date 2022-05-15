@@ -134,4 +134,13 @@ class M_keys extends M_parent {
         $options = $this->_dropdown();
         return form_dropdown('client_id', $options, $selected, $extra);
     }
+
+    public function match( $client_id, $client_secret ) {
+        $this->db->from($this->table);
+        $this->db->where('client_id', filter_alphanumeric($client_id) );
+        $this->db->where('client_secret', filter_alphanumeric($client_secret) );
+        $this->db->where('deleted', 0 );
+
+        return clone $this->db;
+    }
 }

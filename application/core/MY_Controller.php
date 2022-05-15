@@ -60,5 +60,6 @@ class GIT_Controller extends MY_Controller {
     public function __construct($config_name = 'rest_git') {
         parent::__construct($config_name);
 
+        $this->load->config($config_name, false);
     }
 }

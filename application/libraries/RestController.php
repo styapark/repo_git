@@ -535,7 +535,7 @@ class RestController extends \CI_Controller
         }
 
         // Check to see if this key has access to the requested controller
-        if ($this->config->item('rest_enable_keys') && $use_key && empty($this->rest->key) === false && $this->_check_access() === false) {
+        if ($this->config->item('rest_enable_keys') && $use_key && empty($this->rest->key) === false && $this->_check_controller_access() === false) {
             if ($this->config->item('rest_enable_logging') && $log_method) {
                 $this->_log_request();
             }
@@ -2044,5 +2044,28 @@ class RestController extends \CI_Controller
             }
             exit;
         }
+    }
+
+    protected function _check_controller_access() {
+        $auth_library_class = strtolower($this->config->item('auth_library_class'));
+        $auth_controller_function = strtolower($this->config->item('auth_controller_function'));
+
+        if (empty($auth_library_class)) {
+            log_message('debug', 'Library Auth: Failure, empty auth_library_class');
+
+            return false;
+        }
+
+        if (empty($auth_controller_function)) {
+            log_message('debug', 'Library Auth: Failure, empty auth_controller_function');
+
+            return false;
+        }
+
+        if (is_callable([$auth_library_class, $auth_controller_function]) === false) {
+            $this->load->library($auth_library_class);
+        }
+
+        return $this->{$auth_library_class}->$auth_controller_function( $this->rest->key, $this->router->class, $this->router->directory );
     }
 }
