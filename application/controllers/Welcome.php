@@ -66,7 +66,7 @@ class Welcome extends Login_Controller {
             if ( in_array($page, ['dashboard','git']) ) {
                 $cname = ucfirst(strtolower($this->post('alias')));
                 $arr = str_replace('__cname__', $cname, read_file(APPPATH.'/core/Template.php') );
-                $filename = APPPATH.'/controllers/git/'.$cname.'.php';
+                $filename = APPPATH.'controllers/git/'.$cname.'.php';
 
                 if ( !file_exists($filename) ) {
                     $res = $this->m_git->insert( $this->post() );

@@ -177,6 +177,12 @@ if ( !function_exists('filter_alphanumeric') ) {
     }
 }
 
+if ( !function_exists('filter_username') ) {
+    function filter_username( $string ) {
+        return preg_replace('/[^a-zA-Z0-9\-\.\_]+/', '', $string);
+    }
+}
+
 function is_match( $string, $pattern ) {
     $pattern = preg_replace_callback('/([^*])/', function($m) {return preg_quote($m[0], '/');}, $pattern);
     $pattern = str_replace('*', '.*', $pattern);

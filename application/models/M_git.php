@@ -36,7 +36,7 @@ class M_git extends M_parent {
             $this->db->where('path_source', $_path);
         }
         if ( is_string($alias) ) {
-            $this->db->where('alias', filter_alphanumeric($alias));
+            $this->db->where('alias', filter_username($alias));
         }
 
         $this->db->order_by('user_id ASC, id ASC');
@@ -52,6 +52,7 @@ class M_git extends M_parent {
             if ( !($path = is_valid_directory( $option['path_source'] )) ) {
                 return FALSE;
             }
+            print_json($path);
             $this->fetch(NULL, NULL, $path, $option['alias']);
             if ( $this->get_row() ) {
                 return FALSE;
