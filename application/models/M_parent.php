@@ -17,7 +17,7 @@ class M_parent extends CI_Model {
             $res = $this->db->get();
         }
 
-        return $res->num_rows;
+        return $res->num_rows();
     }
 
     public function get_row( $db = NULL, $name = NULL ) {

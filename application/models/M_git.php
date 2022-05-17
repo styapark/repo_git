@@ -52,7 +52,6 @@ class M_git extends M_parent {
             if ( !($path = is_valid_directory( $option['path_source'] )) ) {
                 return FALSE;
             }
-            print_json($path);
             $this->fetch(NULL, NULL, $path, $option['alias']);
             if ( $this->get_row() ) {
                 return FALSE;
@@ -102,7 +101,7 @@ class M_git extends M_parent {
 
                     $filters[ $index ] = $this->db->escape_str($option[$index]);
 
-                    if ( is_array($option[$index]) ) {
+                    if ( is_array($option[$index]) || is_object($option[$index]) ) {
                         $filters[ $index ] = json_encode($option[$index]);
                     }
                 }

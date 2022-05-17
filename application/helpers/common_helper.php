@@ -183,78 +183,88 @@ if ( !function_exists('filter_username') ) {
     }
 }
 
-function is_match( $string, $pattern ) {
-    $pattern = preg_replace_callback('/([^*])/', function($m) {return preg_quote($m[0], '/');}, $pattern);
-    $pattern = str_replace('*', '.*', $pattern);
-    return (bool) preg_match('/^' . $pattern . '$/i', $string);
-}
-
-function is_match_array( $string, $pattern_array = array() ) {
-    if ( !empty($pattern_array) && is_array($pattern_array) ) {
-        foreach ($pattern_array as $pattern) {
-            if ( is_match($string, $pattern) ) return TRUE;
-        }
-        return FALSE;
+if ( !function_exists('is_match') ) {
+    function is_match( $string, $pattern ) {
+        $pattern = preg_replace_callback('/([^*])/', function($m) {return preg_quote($m[0], '/');}, $pattern);
+        $pattern = str_replace('*', '.*', $pattern);
+        return (bool) preg_match('/^' . $pattern . '$/i', $string);
     }
-    return is_match($string, $pattern_array);
 }
 
-function recursive_off( $array, $parent = '', $tmp = array() ) {
-    foreach ($array as $key=>$value) {
-        if ( is_array($value) ) {
-            $tmp = array_merge($tmp, recursive_off($value, $parent.$key));
+if ( !function_exists('is_match_array') ) {
+    function is_match_array( $string, $pattern_array = array() ) {
+        if ( !empty($pattern_array) && is_array($pattern_array) ) {
+            foreach ($pattern_array as $pattern) {
+                if ( is_match($string, $pattern) ) return TRUE;
+            }
+            return FALSE;
         }
-        else {
-            $tmp[] = $parent.$value;
+        return is_match($string, $pattern_array);
+    }
+}
+
+if ( !function_exists('recursive_off') ) {
+    function recursive_off( $array, $parent = '', $tmp = array() ) {
+        foreach ($array as $key=>$value) {
+            if ( is_array($value) ) {
+                $tmp = array_merge($tmp, recursive_off($value, $parent.$key));
+            }
+            else {
+                $tmp[] = $parent.$value;
+            }
         }
+        return $tmp;
     }
-    return $tmp;
 }
 
-/**
- * @return _metaFile
- */
-function _metafile() {
-    return (object) [
-        'dir' => '',
-        'name' => '',
-        'type' => '',
-        'size' => 0,
-        'perms' => 0,
-        'owner' => '',
-        'group' => '',
-        'ctime' => 0,
-        'ctimeh' => '',
-        'mtime' => 0,
-        'mtimeh' => 0,
-        'atime' => 0,
-        'atimeh' => 0,
-    ];
+if ( !function_exists('_metafile') ) {
+    /**
+     * @return _metaFile
+     */
+    function _metafile() {
+        return (object) [
+            'dir' => '',
+            'name' => '',
+            'type' => '',
+            'size' => 0,
+            'perms' => 0,
+            'owner' => '',
+            'group' => '',
+            'ctime' => 0,
+            'ctimeh' => '',
+            'mtime' => 0,
+            'mtimeh' => 0,
+            'atime' => 0,
+            'atimeh' => 0,
+        ];
+    }
 }
 
-/**
- * 
- * @param string $filename
- * @return _metaFile
- */
-function get_metafile( $filename, $dir = NULL ) {
-    $tmp = _metafile();
-    $tmp->dir = dirname($filename);
-    if ( !empty($dir) ) {
-        $tmp->dir = dirname($dir);
-    }
-    $tmp->name = basename($filename);
-    $tmp->type = @mime_content_type($filename);
-    $tmp->size = @filesize($filename);
-    $tmp->perms = (int) sprintf('%o', @fileperms($filename));
-    $tmp->owner = @posix_getpwuid(@fileowner($filename))['name'];
-    $tmp->group = @posix_getgrgid(@filegroup($filename))['name'];
-    $tmp->ctime = @filectime($filename);
-    $tmp->ctimeh = date('c', $tmp->ctime);
-    $tmp->mtime = @filemtime($filename);
-    $tmp->mtimeh = date('c', $tmp->mtime);
-    $tmp->atime = @fileatime($filename);
-    $tmp->atimeh = date('c', $tmp->atime);
+if ( !function_exists('get_metafile') ) {
+    /**
+     * 
+     * @param string $filename
+     * @return _metaFile
+     */
+    function get_metafile( $filename, $dir = NULL ) {
+        $tmp = _metafile();
+        $tmp->dir = dirname($filename);
+        if ( !empty($dir) ) {
+            $tmp->dir = dirname($dir);
+        }
+        $tmp->name = basename($filename);
+        $tmp->type = @mime_content_type($filename);
+        $tmp->size = @filesize($filename);
+        $tmp->perms = (int) sprintf('%o', @fileperms($filename));
+        $tmp->owner = @posix_getpwuid(@fileowner($filename))['name'];
+        $tmp->group = @posix_getgrgid(@filegroup($filename))['name'];
+        $tmp->ctime = @filectime($filename);
+        $tmp->ctimeh = date('c', $tmp->ctime);
+        $tmp->mtime = @filemtime($filename);
+        $tmp->mtimeh = date('c', $tmp->mtime);
+        $tmp->atime = @fileatime($filename);
+        $tmp->atimeh = date('c', $tmp->atime);
 
-    return $tmp;
+        return $tmp;
+    }
 }
