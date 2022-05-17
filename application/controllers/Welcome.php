@@ -108,6 +108,13 @@ class Welcome extends Login_Controller {
     }
 
     public function api_get( $page, $mode = 'table', $id = NULL ) {
+        if ( $page === 'auth_logout' ) {
+            $res = $this->ion_auth->logout();
+            $this->response([
+                'status' => (bool) $res,
+                'message' => $res ? 'Success': 'Failed'
+            ]);
+        }
         if ( in_array($page, ['dashboard','git','keys']) && $this->ion_is_login() ) {
             // table
             if ( in_array($page, ['dashboard','git']) && $mode == 'table' ) {

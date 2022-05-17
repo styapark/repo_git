@@ -502,7 +502,7 @@ if ( $ !== undefined ) {
                     timeout: null,
                     action: function(notification) {
                         Snarl.removeNotification(notification);
-                        var url = root + 'services/auth/logout';
+                        var url = root + 'api/auth_logout';
                         $.get(url, function(e){
                             if ( e.status ) {
                                 setTimeout(function(){
